@@ -14,6 +14,12 @@ map("i", "<C-s>", "<ESC>:w!<CR>", { desc = "Save" })
 
 map("n", "<leader>q", ":qa!<CR>") -- Close faster
 
+-- window size
+map("n", "<M-up>", "<C-w>+", { desc = "Increase window height" })
+map("n", "<M-down>", "<C-w>-", { desc = "Decrease window height" })
+map("n", "<leader>wo", "<C-w>o", { desc = "Close other windows" })
+map("n", "<leader>wq", "<C-w>q", { desc = "Close window" })
+
 -- Change tabs using <S-h> and <S-l>
 map("n", "<S-h>", function()
   require("nvchad.tabufline").prev()
