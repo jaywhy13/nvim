@@ -50,6 +50,7 @@ return {
         "css",
         "python",
         "typescript",
+        "terraform",
       },
     },
   },
