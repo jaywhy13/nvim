@@ -81,6 +81,21 @@ map("n", "<leader>aif", "<cmd>ChatGPTRun fix_bugs<CR>", { desc = "ChatGPT Fix Bu
 map("n", "<leader>aix", "<cmd>ChatGPTRun explain_code<CR>", { desc = "ChatGPT Explain Code" })
 map("n", "<leader>air", "<cmd>ChatGPTRun roxygen_edit<CR>", { desc = "ChatGPT Roxygen Edit" })
 map("n", "<leader>ail", "<cmd>ChatGPTRun code_readability_analysis<CR>", { desc = "ChatGPT Code Readability Analysis" })
+-- AI bindings
+
+-- Copilot Chat bindings
+map({ "n", "v" }, "<leader>aic", "<cmd>CopilotChatToggle<CR>", { desc = "Chat Copilot Toggle" })
+map({ "n", "v" }, "<leader>aif", "<cmd>CopilotChatFix<CR>", { desc = "Copilot Fix" })
+map({ "n", "v" }, "<leader>aio", "<cmd>CopilotChatOptimize<CR>", { desc = "Copilot Optimize" })
+map({ "n", "v" }, "<leader>aid", "<cmd>CopilotChatDocs<CR>", { desc = "Copilot Add Docs" })
+map({ "n", "v" }, "<leader>ait", "<cmd>CopilotChatTests<CR>", { desc = "Copilot Add Tests" })
+
+map({ "n", "v" }, "<leader>aiq", function()
+  local input = vim.fn.input "Quick Chat: "
+  if input ~= "" then
+    require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+  end
+end, { desc = "Copilot Quickfix" })
 
 -- Other miscellaneous things
 map("n", "<leader>h", "<cmd>noh<cr>", { desc = "clear highlights" })
