@@ -74,6 +74,13 @@ map("n", "<leader>ldj", function()
   vim.diagnostic.goto_prev()
 end, { desc = "previous diagnostic" })
 map("n", "<leader>ls", "<cmd>SymbolsOutline<CR>", { desc = "symbol outline" })
+map("n", "<leader>ldt", function()
+  if vim.diagnostic.is_disabled() then
+    vim.diagnostic.enable()
+  else
+    vim.diagnostic.disable()
+  end
+end, { desc = "Toggle Diagnostics" })
 
 -- Nvim Tree bindings
 map("n", "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", { desc = "toggle find file in tree" })
