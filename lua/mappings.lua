@@ -34,6 +34,9 @@ map("n", "<S-x>", function()
   require("nvchad.tabufline").close_buffer()
 end, { desc = "buffer close" })
 
+-- Wrap words with brackets
+map("v", "<leader>(", "<esc>bi(<esc>wwhi)<esc>", { desc = "wrap with brackets" })
+
 -- Telescope bindings
 map("n", "<leader>sb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>ss", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
