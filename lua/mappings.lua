@@ -201,6 +201,14 @@ map("n", "<leader>trc", function()
     end
   end)
 end, { desc = "Run current test case" })
+map({ "n" }, "<M-t>", function()
+  require("nvchad.term").toggle {
+    pos = "sp",
+    id = "pytest",
+    size = 0.7,
+  }
+end, { desc = "Toggle Test Terminal Window" })
+
 -- Makefile bindings
 map("n", "<leader>mr", "<cmd>MakeitOpen<CR>", { desc = "Run Makefile command" })
 map("n", "<leader>mf", "<cmd>MakeitOpen<CR><cmd>normal! iformat<CR>", { desc = "Run Makefile format" })
