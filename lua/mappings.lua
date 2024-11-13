@@ -100,6 +100,10 @@ end, { desc = "Copilot Quickfix" })
 -- Other miscellaneous things
 map("n", "<leader>h", "<cmd>noh<cr>", { desc = "clear highlights" })
 
+-- Makefile bindings
+map("n", "<leader>mr", "<cmd>MakeitOpen<CR>", { desc = "Run Makefile command" })
+map("n", "<leader>mf", "<cmd>MakeitOpen<CR><cmd>normal! iformat<CR>", { desc = "Run Makefile format" })
+
 -- Disable mappings
 local nomap = vim.keymap.del
 
