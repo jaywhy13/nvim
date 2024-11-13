@@ -90,22 +90,21 @@ map("n", "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", { desc = "toggle find f
 vim.keymap.set("n", "zO", require("ufo").openAllFolds)
 vim.keymap.set("n", "zC", require("ufo").closeAllFolds)
 
--- ChatGPT bindings
-
-map("n", "<leader>aic", "<cmd>ChatGPT<CR>", { desc = "ChatGPT" })
-map("n", "<leader>aie", "<cmd>ChatGPTEditWithInstruction<CR>", { desc = "ChatGPT Edit with Instruction" })
-map("n", "<leader>aig", "<cmd>ChatGPTRun grammar_correction<CR>", { desc = "ChatGPT Grammar Correction" })
-map("n", "<leader>ait", "<cmd>ChatGPTRun translate<CR>", { desc = "ChatGPT Translate" })
-map("n", "<leader>aik", "<cmd>ChatGPTRun keywords<CR>", { desc = "ChatGPT Keywords" })
-map("n", "<leader>aid", "<cmd>ChatGPTRun docstring<CR>", { desc = "ChatGPT Docstring" })
-map("n", "<leader>aia", "<cmd>ChatGPTRun add_tests<CR>", { desc = "ChatGPT Add Tests" })
-map("n", "<leader>aio", "<cmd>ChatGPTRun optimize_code<CR>", { desc = "ChatGPT Optimize Code" })
-map("n", "<leader>ais", "<cmd>ChatGPTRun summarize<CR>", { desc = "ChatGPT Summarize" })
-map("n", "<leader>aif", "<cmd>ChatGPTRun fix_bugs<CR>", { desc = "ChatGPT Fix Bugs" })
-map("n", "<leader>aix", "<cmd>ChatGPTRun explain_code<CR>", { desc = "ChatGPT Explain Code" })
-map("n", "<leader>air", "<cmd>ChatGPTRun roxygen_edit<CR>", { desc = "ChatGPT Roxygen Edit" })
-map("n", "<leader>ail", "<cmd>ChatGPTRun code_readability_analysis<CR>", { desc = "ChatGPT Code Readability Analysis" })
 -- AI bindings
+
+map("n", "<leader>aig", "<cmd>ChatGPT<CR>", { desc = "ChatGPT" })
+-- map("n", "<leader>aie", "<cmd>ChatGPTEditWithInstruction<CR>", { desc = "ChatGPT Edit with Instruction" })
+-- map("n", "<leader>aig", "<cmd>ChatGPTRun grammar_correction<CR>", { desc = "ChatGPT Grammar Correction" })
+-- map("n", "<leader>ait", "<cmd>ChatGPTRun translate<CR>", { desc = "ChatGPT Translate" })
+-- map("n", "<leader>aik", "<cmd>ChatGPTRun keywords<CR>", { desc = "ChatGPT Keywords" })
+-- map("n", "<leader>aid", "<cmd>ChatGPTRun docstring<CR>", { desc = "ChatGPT Docstring" })
+-- map("n", "<leader>aia", "<cmd>ChatGPTRun add_tests<CR>", { desc = "ChatGPT Add Tests" })
+-- map("n", "<leader>aio", "<cmd>ChatGPTRun optimize_code<CR>", { desc = "ChatGPT Optimize Code" })
+-- map("n", "<leader>ais", "<cmd>ChatGPTRun summarize<CR>", { desc = "ChatGPT Summarize" })
+-- map("n", "<leader>aif", "<cmd>ChatGPTRun fix_bugs<CR>", { desc = "ChatGPT Fix Bugs" })
+-- map("n", "<leader>aix", "<cmd>ChatGPTRun explain_code<CR>", { desc = "ChatGPT Explain Code" })
+-- map("n", "<leader>air", "<cmd>ChatGPTRun roxygen_edit<CR>", { desc = "ChatGPT Roxygen Edit" })
+-- map("n", "<leader>ail", "<cmd>ChatGPTRun code_readability_analysis<CR>", { desc = "ChatGPT Code Readability Analysis" })
 
 -- Copilot Chat bindings
 map({ "n", "v" }, "<leader>aic", "<cmd>CopilotChatToggle<CR>", { desc = "Chat Copilot Toggle" })
