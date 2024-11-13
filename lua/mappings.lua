@@ -120,6 +120,13 @@ map({ "n", "v" }, "<leader>aiq", function()
   end
 end, { desc = "Copilot Quickfix" })
 
+-- terminal bindings
+map({ "n", "t" }, "<A-h>", function()
+  -- local num = vim.v.count
+  local terminal_id = "htoggleTerm"
+  require("nvchad.term").toggle { pos = "sp", id = terminal_id, size = 0.7 }
+end, { desc = "terminal toggleable horizontal term" })
+
 -- Other miscellaneous things
 map("n", "<leader>h", "<cmd>noh<cr>", { desc = "clear highlights" })
 
