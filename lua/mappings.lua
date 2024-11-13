@@ -41,8 +41,15 @@ map("v", "<leader>(", "<esc>bi(<esc>wwhi)<esc>", { desc = "wrap with brackets" }
 map("n", "<leader>sb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>ss", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
 map("n", "<leader>sf", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
-map("n", "<leader>st", "<cmd>Telescope live_grep<cr>:", { desc = "telescope find in files" })
-map("n", "<leader>sq", "<cmd>Telescope quickfix<cr>:", { desc = "telescope quickfix" })
+map("n", "<leader>st", "<cmd>Telescope live_grep<cr>", { desc = "telescope find in files" })
+map("n", "<leader>sq", "<cmd>Telescope quickfix<cr>", { desc = "telescope quickfix" })
+-- Search for the word under the cursor. Copy the word to register z, then paste it in the prompt
+map(
+  "v",
+  "<leader>st",
+  '"zy:Telescope live_grep default_text=<C-r>z<cr>',
+  { desc = "telescope find in files with visual selection" }
+)
 --
 -- LSP bindings
 map("n", "<leader>lh", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "show hover information" })
