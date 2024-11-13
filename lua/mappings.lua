@@ -5,13 +5,14 @@ require "nvchad.mappings"
 local map = vim.keymap.set
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
+map("n", "<C-c>", "<ESC>", { desc = "Escape" })
 -- map("i", "jk", "<ESC>")
-map("i", "<C-l>", "<ESC>l")
-map({ "i", "n" }, "<C-s>", ":w!<CR>", { desc = "Save" })
+map("n", "<C-s>", ":w!<CR>", { desc = "Save" })
+map("i", "<C-s>", "<ESC>:w!<CR>", { desc = "Save" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
-map("n", "<leader>q", ":xa!<CR>") -- Close faster
+map("n", "<leader>q", ":qa!<CR>") -- Close faster
 
 -- Change tabs using <S-h> and <S-l>
 map("n", "<S-h>", function()
