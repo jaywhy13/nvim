@@ -5,7 +5,9 @@ local capabilities = require("nvchad.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
 -- Add language servers we want support for below
-local servers = { "html", "cssls", "pyright", "tsserver" }
+-- Note that tsserver uses the typescript-language-server (https://github.com/typescript-language-server/typescript-language-server)
+-- which does formatting and has it's own configuration
+local servers = { "html", "cssls", "pyright", "graphql" }
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -15,3 +17,17 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+-- tsserver custom setup
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  on_init = on_init,
+  capabilities = capabilities,
+  initializationOptions = {
+    hostInfo = "neovim",
+    preferences = {
+      disableSuggestions = true,
+      quotePreference = "single",
+    },
+  },
+}
