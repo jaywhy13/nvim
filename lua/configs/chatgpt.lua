@@ -1,3 +1,3 @@
 local config = {}
 
-require("chatgpt").setup(config)
+-- require("chatgpt").setup(config)
