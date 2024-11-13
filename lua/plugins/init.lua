@@ -147,6 +147,11 @@ return {
       require "configs.octo"
     end,
   },
+  {
+    "jparise/vim-graphql",
+  },
+
+  --
   -- These are some examples, uncomment them if you want to see them work!
   --
   -- {
