@@ -209,6 +209,14 @@ map({ "n" }, "<M-t>", function()
   }
 end, { desc = "Toggle Test Terminal Window" })
 
+map("n", "<leader>cf", function()
+  local current_filename = vim.api.nvim_buf_get_name(0)
+  local relative_filename = string.gsub(current_filename, vim.loop.cwd() .. "/", "")
+
+  -- Copy to cliopboard
+  vim.fn.setreg("+", relative_filename)
+end, { desc = "Copy file path" })
+
 -- Makefile bindings
 map("n", "<leader>mr", "<cmd>MakeitOpen<CR>", { desc = "Run Makefile command" })
 map("n", "<leader>mf", "<cmd>MakeitOpen<CR><cmd>normal! iformat<CR>", { desc = "Run Makefile format" })
