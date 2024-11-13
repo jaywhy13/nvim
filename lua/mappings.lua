@@ -63,7 +63,7 @@ map("n", "<leader>lgD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "goto
 map("n", "<leader>lgr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "goto references" })
 map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
 map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "format" })
-map("i", "<C-space>", "<cmd>lua vim.lsp.buf.completion()<cr>", { desc = "autocomplete" })
+map("n", "<leader>la", "i<cmd>lua vim.lsp.buf.completion()<cr>", { desc = "autocomplete" })
 map("n", "<leader>ldd", function()
   require("trouble").toggle "document_diagnostics"
 end, { desc = "open document diagnostics" })
