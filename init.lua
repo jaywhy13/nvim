@@ -51,8 +51,6 @@ local function edit_or_open()
     api.node.open.edit()
   else
     -- open file
-    api.node.open.edit()
-    -- Close the tree if file was opened
     api.tree.close()
   end
 end
@@ -60,6 +58,8 @@ local function setup_nvim_tree()
   vim.keymap.set("n", "l", edit_or_open, { desc = "Edit Or Open" })
   vim.keymap.set("n", "h", require("nvim-tree.api").close(), { desc = "Close" })
 end
+
 require("nvim-tree").setup {
   -- on_attach = setup_nvim_tree,
 }
+require "colors"

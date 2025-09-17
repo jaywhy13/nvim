@@ -5,8 +5,8 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = {
-  theme = "jabuti",
+M.base46 = {
+  theme = "ayu_dark",
 
   -- hl_override = {
   -- 	Comment = { italic = true },
@@ -15,7 +15,7 @@ M.ui = {
   --
   telescope = {
     style = "borderless",
-  }
+  },
 }
 
 return M
