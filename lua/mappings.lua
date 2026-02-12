@@ -126,6 +126,13 @@ vim.keymap.set("n", "zO", require("ufo").openAllFolds)
 vim.keymap.set("n", "zC", require("ufo").closeAllFolds)
 
 -- AI bindings
+-- CodeCompanion
+map({ "n", "v" }, "<leader>aic", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "Code Companion Chat Toggle" })
+map({ "v" }, "<leader>aii", "<cmd>CodeCompanion<cr>", { desc = "Code Companion Inline" })
+map({ "n", "v" }, "<leader>ain", "<cmd>CodeCompanionChat<cr>", { desc = "Code Companion Chat" })
+map("n", "<leader>aia", "<cmd>CodeCompanionActions<cr>", { desc = "Code Companion Actions" })
+map("n", "<leader>aim", "<cmd>MCPHub<cr>", { desc = "MCP Hub" })
+map({ "n", "v" }, "<leader>aid", "<cmd>Copilot disable<cr>", { desc = "Copilot Disable" })
 
 -- terminal bindings
 map({ "n", "t" }, "<A-h>", function()
