@@ -95,6 +95,93 @@ return {
     },
     -- See Commands section for default commands if you want to lazy load on them
   },
+
+  -- Code Companion
+
+  {
+    "olimorris/codecompanion.nvim",
+    opts = {},
+    event = "BufEnter",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require "configs.codecompanion"
+    end,
+  },
+
+  -- Some additional plugins to make Code Companion better
+  {
+    -- I wasn't able to markdown working properly. In normal mode, headings
+    -- and other markdown elements were not being rendered properly.
+    -- I created an issue here: https://github.com/OXY2DEV/markview.nvim/issues/92
+    -- For now, doing :Markview toggle works nicely
+    "OXY2DEV/markview.nvim",
+    lazy = false,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-lua/plenary.nvim",
+    },
+    opts = function()
+      local function conceal_tag(icon, hl_group)
+        return {
+          on_node = { hl_group = hl_group },
+          on_closing_tag = { conceal = "" },
+          on_opening_tag = {
+            conceal = "",
+            virt_text_pos = "inline",
+            virt_text = { { icon .. " ", hl_group } },
+          },
+        }
+      end
+
+      return {
+        markdown = {
+          hybrid_modes = { "n", "i" },
+        },
+        html = {
+          container_elements = {
+            ["^buf$"] = conceal_tag("", "CodeCompanionChatVariable"),
+            ["^file$"] = conceal_tag("", "CodeCompanionChatVariable"),
+            ["^help$"] = conceal_tag("󰘥", "CodeCompanionChatVariable"),
+            ["^image$"] = conceal_tag("", "CodeCompanionChatVariable"),
+            ["^symbols$"] = conceal_tag("", "CodeCompanionChatVariable"),
+            ["^url$"] = conceal_tag("󰖟", "CodeCompanionChatVariable"),
+            ["^var$"] = conceal_tag("", "CodeCompanionChatVariable"),
+            ["^tool$"] = conceal_tag("", "CodeCompanionChatTool"),
+            ["^user_prompt$"] = conceal_tag("", "CodeCompanionChatTool"),
+            ["^group$"] = conceal_tag("", "CodeCompanionChatToolGroup"),
+          },
+        },
+      }
+    end,
+  },
+  --Use mini.diff for a cleaner diff when using the inline assistant or the @insert_edit_into_file tool
+  {
+    "echasnovski/mini.diff",
+    config = function()
+      local diff = require "mini.diff"
+      diff.setup {
+        -- Disabled by default
+        source = diff.gen_source.none(),
+      }
+    end,
+  },
+  -- Use img-clip.nvim to copy images from your system clipboard into a chat buffer via :PasteImage:
+
+  {
+    "HakonHarnes/img-clip.nvim",
+    opts = {
+      filetypes = {
+        codecompanion = {
+          prompt_for_file_name = false,
+          template = "[Image]($FILE_PATH)",
+          use_absolute_path = true,
+        },
+      },
+    },
+  },
   -- Weather
   {
     "wyattjsmith1/weather.nvim",
