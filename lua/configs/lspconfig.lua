@@ -1,13 +1,17 @@
--- EXAMPLE
 local on_attach = require("nvchad.configs.lspconfig").on_attach
 local on_init = require("nvchad.configs.lspconfig").on_init
 local capabilities = require("nvchad.configs.lspconfig").capabilities
-
+-- Enable folding via nvim-ufo
+-- See https://github.com/kevinhwang91/nvim-ufo?tab=readme-ov-file#minimal-configuration
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
+}
 local lspconfig = require "lspconfig"
 -- Add language servers we want support for below
 -- Note that tsserver uses the typescript-language-server (https://github.com/typescript-language-server/typescript-language-server)
 -- which does formatting and has it's own configuration
-local servers = { "html", "cssls", "pyright", "graphql" }
+local servers = { "html", "cssls", "pyright", "graphql", "terraformls", "ruff" }
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
