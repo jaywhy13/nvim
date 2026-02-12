@@ -21,6 +21,39 @@ Below is a high-level summary of the main plugin themes and the plugins used for
 - **Plugin Management:** All plugins are managed via Lazy.nvim and configured in `lua/plugins/init.lua`.
 - **Customization:** Each plugin's configuration can be found in the `lua/configs/` directory.
 
+## Repository Structure
+
+```
+.
+├── init.lua                # Main Neovim configuration entry point (highlighted)
+├── mcpservers.json         # Server configuration file (highlighted)
+├── lua/
+│   ├── chadrc.lua
+│   ├── colors.lua          # Color scheme and highlight settings
+│   ├── mappings.lua        # Key mappings and shortcuts
+│   ├── options.lua         # General Neovim options
+│   ├── configs/            # Plugin configurations (one file per plugin)
+│   ├── custom/             # User-specific or experimental Lua scripts
+│   └── plugins/            # Plugin initialization and management
+├── .stylua.toml
+├── LICENSE
+├── README.md
+└── lazy-lock.json
+```
+
+### Highlights
+
+- **init.lua**: The main entry point for Neovim configuration.
+- **mcpservers.json**: Contains server-specific settings.
+- **lua/configs/**: Houses configuration files for each plugin, making it easy to manage and customize plugins individually.
+- **lua/colors.lua**: Manages color schemes and highlight groups.
+- **lua/mappings.lua**: Centralizes key mappings for easier navigation and command execution.
+- **lua/options.lua**: Sets global Neovim options.
+- **lua/custom/**: For user-specific or experimental Lua scripts.
+- **lua/plugins/**: Handles plugin initialization and management.
+
+This modular structure keeps your configuration organized, maintainable, and easy to extend.
+
 ---
 
 Continue reading for setup instructions, usage tips, and plugin-specific configuration details.
