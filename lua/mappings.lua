@@ -78,7 +78,17 @@ map("n", "<leader>lgd", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "goto 
 map("n", "<leader>lgD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "goto declaration" })
 map("n", "<leader>lgr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "goto references" })
 map("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "rename" })
-map("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<cr>", { desc = "format" })
+map("n", "<leader>lf", function()
+  -- Our LSP servers don't do formatting. Conform is the one that does it.
+  -- We've configured Conform in conform.lua to fallback to LSP formatting
+  -- if it's available. However, Conform is the one that should be called
+  -- to do the formatting.
+  -- If we call lsp.buf.format() directly, then we're bypassing Conform,
+  -- and if the LSP server doesn't support formatting (e.g. Pyright)
+  -- then we get the error "no matching language servers"
+  -- PS: We can always use :LspInfo to see what servers are attached to the buffer
+  require("conform").format { async = true }
+end, { desc = "format" })
 map("n", "<leader>la", "i<cmd>lua vim.lsp.buf.completion()<cr>", { desc = "autocomplete" })
 map("n", "<leader>ldd", "<cmd>Trouble diagnostics toggle focus=true<cr>", { desc = "open document diagnostics" })
 -- map("n", "<leader>ldd", function()
