@@ -136,9 +136,28 @@ map({ "n", "v" }, "<leader>aid", "<cmd>Copilot disable<cr>", { desc = "Copilot D
 
 -- terminal bindings
 map({ "n", "t" }, "<A-h>", function()
-  -- local num = vim.v.count
-  local terminal_id = "htoggleTerm"
-  require("nvchad.term").toggle { pos = "sp", id = terminal_id, size = 0.7 }
+  local count = vim.v.count
+  local terminal_id = "htoggleTerm" .. count
+  local last_opened_terminal_id = vim.g.last_opened_terminal_id
+
+  if not last_opened_terminal_id then
+    -- No terminal is currently opened
+    vim.g.last_opened_terminal_id = terminal_id
+    require("nvchad.term").toggle { pos = "sp", id = terminal_id, size = 0.7 }
+  else
+    -- a terminal is open
+    if terminal_id == last_opened_terminal_id then
+      -- toggle the same terminal
+      require("nvchad.term").toggle { pos = "sp", id = terminal_id, size = 0.7 }
+      vim.g.last_opened_terminal_id = nil
+    else
+      -- close the last opened terminal
+      require("nvchad.term").toggle { id = last_opened_terminal_id }
+      -- open the new terminal
+      vim.g.last_opened_terminal_id = terminal_id
+      require("nvchad.term").toggle { pos = "sp", id = terminal_id, size = 0.7 }
+    end
+  end
 end, { desc = "terminal toggleable horizontal term" })
 
 -- Wave terminal bindings
