@@ -397,12 +397,16 @@ return {
     end,
   },
   -- Neotree
+  -- Nvim-tree
   {
     "nvim-tree/nvim-tree.lua",
-    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-    opts = function()
-      require "configs.nvim-tree"
-    end,
+    opts = {
+      filters = {
+        dotfiles = false,
+        git_ignored = false,
+        custom = { "^.git$", "^venv$", "node_modules" },
+      },
+    },
   },
   -- Tabbed searches
   {
