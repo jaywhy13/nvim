@@ -126,29 +126,6 @@ vim.keymap.set("n", "zO", require("ufo").openAllFolds)
 vim.keymap.set("n", "zC", require("ufo").closeAllFolds)
 
 -- AI bindings
-local function add_selected_file_to_avante()
-  api = require("nvim-tree.api")
-  absolute_path = api.tree.get_node_under_cursor().absolute_path
-
-  -- Convert to relative path
-  local relative_path = require('avante.utils').relative_path(absolute_path)
-
-  -- Get the sidebar and open it if closed
-  local sidebar = require('avante').get()
-
-  local open = sidebar:is_open()
-  -- ensure avante sidebar is open
-  if not open then
-    require('avante.api').ask()
-    sidebar = require('avante').get()
-  end
-
-  sidebar.file_selector:add_selected_file(relative_path)
-end
-
-map({ "n", "v" }, "<leader>aia", add_selected_file_to_avante, { desc = "Add file to Avante" })
-
-
 
 -- terminal bindings
 map({ "n", "t" }, "<A-h>", function()
