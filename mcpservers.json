@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "context7": {
+      "autoApprove": true,
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "git": {
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--mount",
+        "type=bind,src=${REPOSITORY_PATH},dst=/workspace",
+        "mcp/git"
+      ],
+      "command": "docker"
+    },
+ "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${env:GITHUB_TOKEN}"
+      }
+    }
+
+  }
+}
