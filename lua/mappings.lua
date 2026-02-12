@@ -116,7 +116,9 @@ map(
 )
 
 -- Nvim Tree bindings
-map("n", "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", { desc = "toggle find file in tree" })
+map("n", "<leader>tt", "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Tree find file toggle" })
+
+map("n", "<leader>tf", "<cmd>NvimTreeFindFile<cr>", { desc = "Tree find file" })
 
 -- Nvim Ufo (Folds) bindings
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
