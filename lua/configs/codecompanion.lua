@@ -71,6 +71,12 @@ require("codecompanion").setup {
         -- Add further custom keymaps here
       },
       tools = {
+        opts = {
+          default_tools = {
+            "file_search",
+            "read_file",
+          },
+        },
         groups = {
           ["edit_file"] = {
             description = "Tools for editing files",
@@ -84,6 +90,32 @@ require("codecompanion").setup {
               "list_code_usages",
               "read_file",
             },
+          },
+        },
+        -- Auto-approve if the file is not hidden (does not start with a dot)
+        ["read_file"] = {
+          opts = {
+            require_approval_before = function(params)
+              -- params.file should contain the file path
+              local filename = vim.fn.fnamemodify(params.file, ":t")
+              return vim.startswith(filename, ".")
+            end,
+          },
+        },
+        ["file_search"] = {
+          opts = {
+            require_approval_before = function(params)
+              local filename = vim.fn.fnamemodify(params.file, ":t")
+              return vim.startswith(filename, ".")
+            end,
+          },
+        },
+        ["grep_search"] = {
+          opts = {
+            require_approval_before = function(params)
+              local filename = vim.fn.fnamemodify(params.file, ":t")
+              return vim.startswith(filename, ".")
+            end,
           },
         },
       },
