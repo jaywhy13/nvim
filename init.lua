@@ -38,28 +38,6 @@ vim.schedule(function()
   require "mappings"
 end)
 
--- require("lspconfig").pyright.setup {}
--- require("lspconfig").tsserver.setup {}
-
--- Configure nvim tree
-local function edit_or_open()
-  local api = require "nvim-tree.api"
-  local node = api.tree.get_node_under_cursor()
-
-  if node.nodes ~= nil then
-    -- expand or collapse folder
-    api.node.open.edit()
-  else
-    -- open file
-    api.tree.close()
-  end
-end
-local function setup_nvim_tree()
-  vim.keymap.set("n", "l", edit_or_open, { desc = "Edit Or Open" })
-  vim.keymap.set("n", "h", require("nvim-tree.api").close(), { desc = "Close" })
-end
-
-require("nvim-tree").setup {
-  -- on_attach = setup_nvim_tree,
-}
 require "colors"
+
+require "custom.init"
