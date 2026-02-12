@@ -57,6 +57,8 @@ return {
         "python",
         "typescript",
         "terraform",
+        "markdown",
+        "markdown_inline",
       },
     },
   },
