@@ -1,4 +1,20 @@
 require("spectre").setup {
+  find_engine = {
+    -- rg is map with finder arguments
+    ["rg"] = {
+      cmd = "rg",
+      args = {
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--pcre2",
+      },
+    },
+    -- you can put your own finder here like ag, pt, grep etc
+    -- and a custom function
+  },
   mapping = {
     ["toggle_line"] = {
       map = "tl",
