@@ -147,7 +147,9 @@ require("codecompanion").setup {
         show_result_in_chat = true, -- Show tool results directly in chat buffer
         format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
         -- MCP Resources
-        make_vars = true, -- Convert MCP resources to #variables for prompts
+        -- Setting this to False temporarily until this issue is resolved:
+        -- https://github.com/ravitemer/mcphub.nvim/issues/275
+        make_vars = false, -- Convert MCP resources to #variables for prompts
         -- MCP Prompts
         make_slash_commands = true, -- Add MCP prompts as /slash commands
       },
