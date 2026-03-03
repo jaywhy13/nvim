@@ -56,8 +56,12 @@ require("codecompanion").setup {
       },
     },
   },
-  strategies = {
+  interactions = {
     chat = {
+      adapter = {
+        name = "copilot",
+        model = "claude-sonnet-4.6",
+      },
       auto_scroll = false,
       keymaps = {
         send = {
