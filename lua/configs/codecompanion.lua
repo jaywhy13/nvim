@@ -14,7 +14,7 @@ require("codecompanion").setup {
         is_default = true,
         is_slash_cmd = true,
         short_name = "generate_commit_message",
-        auto_submit = true,
+        auto_submit = false,
       },
     },
     ["Explain Concept"] = {
@@ -55,6 +55,53 @@ require("codecompanion").setup {
         auto_submit = true,
       },
     },
+    ["Research & Reconnaissance"] = {
+      strategy = "chat",
+      description = "Analyze the codebase for a specific task using a read-only strategy.",
+      prompts = {
+        {
+          role = "system",
+          content = [[You are a Technical Strategist and Researcher. 
+
+### YOUR OBJECTIVE
+Review the user's task below and perform a thorough investigation of the repository to familiarize yourself with the relevant logic, patterns, and dependencies. Use your tools liberally to "look before you leap."
+
+### CONSTRAINTS
+- **Read-Only**: You are a researcher. You may suggest code changes in the chat, but you must NEVER attempt to edit files or execute system commands.
+- **Communication**: Use extreme clarity and simplicity. If the architecture is complex, use an analogy to simplify it.
+- **Tools**: Use 'file_search', 'read_file', and 'grep_search' to map the project. Use 'get_diagnostics' to identify potential friction points related to the task.
+
+### RESPONSE STRUCTURE
+1. **Overview**: A concise summary of your findings. Explain the "lay of the land" as it relates to the task.
+2. **High-Level Checklist**: A bulleted list of the logical milestones that must be completed.
+3. **Stop**: You must end your response immediately after the checklist. Do not offer to implement the code or ask follow-up questions.]],
+        },
+        {
+          role = "user",
+          content = "Review the following task and familiarize yourself with the codebase to prepare a plan:\n\n",
+        },
+      },
+      opts = {
+        index = 10,
+        is_default = true,
+        is_slash_cmd = true,
+        short_name = "repository_research",
+        auto_submit = false, -- Allows you to paste your task details before sending
+        user_prompt = false,
+      },
+      -- Ensuring the agent only uses the requested read-only tools
+      tools = {
+        "ask_questions",
+        "fetch_webpage",
+        "file_search",
+        "get_changed_files",
+        "get_diagnostics",
+        "grep_search",
+        "memory",
+        "read_file",
+        "web_search",
+      },
+    },
   },
   interactions = {
     chat = {
@@ -69,9 +116,10 @@ require("codecompanion").setup {
           opts = {},
         },
         close = {
-          modes = { n = "<Esc>", i = "<Esc>" },
+          modes = { n = "<S-x>", i = "<C-S-x>" },
           opts = {},
         },
+        clear = false,
         -- Add further custom keymaps here
       },
       tools = {
