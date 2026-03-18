@@ -2,8 +2,18 @@
   "mcpServers": {
     "context7": {
       "autoApprove": true,
+      "disabled": false,
       "type": "streamable-http",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "datadog": {
+      "disabled": false,
+      "headers": {
+        "DD-API-KEY": "${env:DD_MCP_API_KEY}",
+        "DD-APPLICATION-KEY": "${env:DD_MCP_APPLICATION_KEY}"
+      },
+      "type": "http",
+      "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp"
     },
     "git": {
       "args": [
@@ -16,13 +26,12 @@
       ],
       "command": "docker"
     },
- "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
+    "github": {
       "headers": {
         "Authorization": "Bearer ${env:GITHUB_TOKEN}"
-      }
+      },
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
     }
-
   }
 }
