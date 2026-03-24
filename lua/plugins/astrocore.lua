@@ -24,19 +24,6 @@ return {
       virtual_text = true,
       underline = true,
     },
-    -- passed to `vim.filetype.add`
-    filetypes = {
-      -- see `:h vim.filetype.add` for usage
-      extension = {
-        foo = "fooscript",
-      },
-      filename = {
-        [".foorc"] = "fooscript",
-      },
-      pattern = {
-        [".*/etc/foo/.*"] = "fooscript",
-      },
-    },
     -- vim options can be configured here
     options = {
       opt = { -- vim.opt.<key>
@@ -57,8 +44,6 @@ return {
     mappings = {
       -- first key is the mode
       n = {
-        -- second key is the lefthand side of the map
-
         -- navigate buffer tabs
         ["L"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
@@ -73,12 +58,54 @@ return {
           desc = "Close buffer from tabline",
         },
 
-        -- tables with just a `desc` key will be registered with which-key if it's installed
-        -- this is useful for naming menus
-        -- ["<Leader>b"] = { desc = "Buffers" },
+        -- close current buffer
+        ["<S-x>"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" },
 
-        -- setting a mapping to false will disable it
-        -- ["<C-S>"] = false,
+        -- command mode shortcut
+        [";"] = { ":", desc = "Enter command mode" },
+
+        -- save
+        ["<C-s>"] = { "<cmd>w!<cr>", desc = "Save file" },
+        ["<C-S-s>"] = { "<cmd>noautocmd w<cr>", desc = "Save file without triggering auto-commands" },
+
+        -- quit all
+        ["<Leader>q"] = { "<cmd>qa!<cr>", desc = "Quit all" },
+
+        -- window management
+        ["<M-up>"] = { "<C-w>+", desc = "Increase window height" },
+        ["<M-down>"] = { "<C-w>-", desc = "Decrease window height" },
+        ["<Leader>wo"] = { "<C-w>o", desc = "Close other windows" },
+        ["<Leader>wq"] = { "<C-w>q", desc = "Close window" },
+
+        -- clear search highlights
+        ["<Leader>h"] = { "<cmd>noh<cr>", desc = "Clear search highlights" },
+
+        -- copy relative file path to clipboard
+        ["<Leader>cf"] = {
+          function()
+            local path = string.gsub(vim.api.nvim_buf_get_name(0), vim.loop.cwd() .. "/", "")
+            vim.fn.setreg("+", path)
+          end,
+          desc = "Copy relative file path",
+        },
+
+        -- terminal toggle
+        ["<A-h>"] = { "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Toggle horizontal terminal" },
+      },
+
+      i = {
+        -- save from insert mode
+        ["<C-s>"] = { "<ESC><cmd>w!<cr>", desc = "Save file" },
+      },
+
+      v = {
+        -- wrap visual selection with parentheses
+        ["<Leader>("] = { "<esc>bi(<esc>wwhi)<esc>", desc = "Wrap selection with parentheses" },
+      },
+
+      t = {
+        -- terminal toggle (dismiss)
+        ["<A-h>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle horizontal terminal" },
       },
     },
   },
