@@ -18,6 +18,9 @@ return {
       timeout_ms = 1000,
     },
     -- customize language server configuration options passed to `lspconfig`
+    -- NOTE: Do NOT add rust_analyzer here. rustaceanvim (via astrocommunity.pack.rust)
+    -- manages rust-analyzer directly and bypasses lspconfig entirely. Adding it here
+    -- would cause two LSP clients to attach to Rust buffers simultaneously.
     ---@diagnostic disable: missing-fields
     config = {
       ts_ls = {
