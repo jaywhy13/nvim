@@ -1,4 +1,39 @@
 return {
+  -- Render markdown nicely inside Neovim buffers, including CodeCompanion chat
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown", "codecompanion" },
+    opts = {},
+  },
+
+  -- Clean inline diff view used by CodeCompanion's inline assistant and
+  -- the @insert_edit_into_file tool. Disabled by default; CodeCompanion
+  -- activates it when needed.
+  {
+    "echasnovski/mini.diff",
+    config = function()
+      local diff = require "mini.diff"
+      diff.setup { source = diff.gen_source.none() }
+    end,
+  },
+
+  -- Paste images from the system clipboard into a CodeCompanion chat buffer
+  -- via :PasteImage
+  {
+    "HakonHarnes/img-clip.nvim",
+    opts = {
+      filetypes = {
+        codecompanion = {
+          prompt_for_file_name = false,
+          template = "[Image]($FILE_PATH)",
+          use_absolute_path = true,
+        },
+      },
+    },
+  },
+
+  {
     "olimorris/codecompanion.nvim",
     opts = {},
     event = "BufEnter",
@@ -267,4 +302,5 @@ Use your tools liberally to gather context. Research the web for documentation, 
       },
     }
   end,
-  }
+  },
+}
