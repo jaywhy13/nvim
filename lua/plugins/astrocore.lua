@@ -71,6 +71,9 @@ return {
         -- quit all
         ["<Leader>q"] = { "<cmd>qa!<cr>", desc = "Quit all" },
 
+        -- disable AstroNvim default <Leader>w save
+        ["<Leader>w"] = false,
+
         -- window management
         ["<M-up>"] = { "<C-w>+", desc = "Increase window height" },
         ["<M-down>"] = { "<C-w>-", desc = "Decrease window height" },
