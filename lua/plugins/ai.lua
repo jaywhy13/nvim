@@ -298,6 +298,17 @@ Use your tools liberally to gather context. Research the web for documentation, 
 									end,
 								},
 								url = "https://proxy.shopify.ai/apis/anthropic/v1/messages",
+								schema = {
+									-- Opus 4.7 rejects `temperature` with HTTP 400:
+									-- "temperature is deprecated for this model"
+									-- Setting default to nil prevents CodeCompanion from sending it.
+									temperature = {
+										mapping = "parameters",
+										type = "number",
+										optional = true,
+										default = nil,
+									},
+								},
 							})
 						end,
 					},
