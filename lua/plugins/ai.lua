@@ -173,7 +173,7 @@ Review the user's task below and perform a thorough investigation of the reposit
 					chat = {
 						adapter = {
 							name = "anthropic",
-							model = "claude-sonnet-4.6",
+							model = "claude-opus-4-7",
 						},
 						auto_scroll = false,
 						keymaps = {
