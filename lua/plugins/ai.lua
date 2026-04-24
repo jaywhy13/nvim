@@ -384,4 +384,34 @@ Use your tools liberally to gather context. Research the web for documentation, 
 			{ "<leader>aiss", "<cmd>TTSStop<cr>", desc = "Stop", mode = { "n" } },
 		},
 	},
+
+	-- GitHub Copilot inline completions (tab to accept)
+	-- Requires Copilot Business access: @spy github copilot add user=<github_handle>
+	-- Authenticates directly with GitHub (not via Shopify LLM proxy)
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					enabled = true,
+					auto_trigger = true,
+					keymap = {
+						accept = "<Tab>",
+						accept_word = "<M-w>",
+						accept_line = "<M-l>",
+						next = "<M-]>",
+						prev = "<M-[>",
+						dismiss = "<C-]>",
+					},
+				},
+				panel = { enabled = false },
+				filetypes = {
+					markdown = true,
+					yaml = true,
+				},
+			})
+		end,
+	},
 }
