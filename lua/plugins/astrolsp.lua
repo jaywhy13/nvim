@@ -17,6 +17,7 @@ return {
       },
       timeout_ms = 1000,
     },
+    servers = { "sorbet" },
     -- customize language server configuration options passed to `lspconfig`
     -- NOTE: Do NOT add rust_analyzer here. rustaceanvim (via astrocommunity.pack.rust)
     -- manages rust-analyzer directly and bypasses lspconfig entirely. Adding it here
@@ -31,6 +32,12 @@ return {
             quotePreference = "single",
           },
         },
+      },
+      sorbet = {
+        cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--disable-watchman" },
+        root_dir = function(fname)
+          return require("lspconfig.util").root_pattern("sorbet/config", "Gemfile", ".git")(fname)
+        end,
       },
     },
     autocmds = {
