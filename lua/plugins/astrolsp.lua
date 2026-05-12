@@ -17,7 +17,16 @@ return {
       },
       timeout_ms = 1000,
     },
-    servers = { "sorbet" },
+    -- Ruby setup:
+    --   ruby_lsp  -> definitions / references / completion / hover (works in any Ruby project)
+    --   sorbet    -> type-checker diagnostics (only attaches when the repo has sorbet/config)
+    servers = { "ruby_lsp", "sorbet" },
+    -- Mason can auto-enable installed Ruby servers (solargraph/standardrb).
+    -- We use ruby-lsp + sorbet instead.
+    handlers = {
+      solargraph = false,
+      standardrb = false,
+    },
     -- customize language server configuration options passed to `lspconfig`
     -- NOTE: Do NOT add rust_analyzer here. rustaceanvim (via astrocommunity.pack.rust)
     -- manages rust-analyzer directly and bypasses lspconfig entirely. Adding it here
@@ -33,10 +42,29 @@ return {
           },
         },
       },
+      ruby_lsp = {
+        -- ruby-lsp itself manages its own custom Bundle, so call the binary directly
+        -- (Mason installs it to ~/.local/share/nvim/mason/bin/ruby-lsp).
+        -- Attach for any Ruby file, even outside a Gemfile project.
+        root_markers = { "Gemfile", ".ruby-version", ".git" },
+        single_file_support = true,
+      },
       sorbet = {
         cmd = { "bundle", "exec", "srb", "tc", "--lsp", "--disable-watchman" },
-        root_dir = function(fname)
-          return require("lspconfig.util").root_pattern("sorbet/config", "Gemfile", ".git")(fname)
+        -- Only attach Sorbet when the repo actually has Sorbet configured.
+        -- Otherwise `bundle exec srb` fails with "command not found: srb" and spams lsp.log.
+        root_markers = { "sorbet/config" },
+        root_dir = function(bufnr, on_dir)
+          -- Walk up from the buffer looking for sorbet/config; if found, use the
+          -- repo root (its parent's parent of sorbet/) so Sorbet's relative diagnostic
+          -- paths resolve against the repo root, not the sorbet/ directory.
+          local sorbet_config = vim.fs.find("sorbet/config", {
+            upward = true,
+            path = vim.api.nvim_buf_get_name(bufnr),
+          })[1]
+          if not sorbet_config then return end -- no Sorbet in this project, skip attach
+          local repo_root = vim.fs.root(bufnr, { "Gemfile", ".git" })
+          if repo_root then on_dir(repo_root) end
         end,
       },
     },
