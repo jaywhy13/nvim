@@ -83,6 +83,37 @@ return {
         -- clear search highlights
         ["<Leader>h"] = { "<cmd>noh<cr>", desc = "Clear search highlights" },
 
+        -- toggle markdown checkbox on the current line
+        ["<Leader>mt"] = {
+          function()
+            local current_line = vim.api.nvim_get_current_line()
+            local unchecked_checkbox_start_column = current_line:find("%[ %]")
+
+            if unchecked_checkbox_start_column then
+              local checked_line = current_line:sub(1, unchecked_checkbox_start_column)
+                .. "x"
+                .. current_line:sub(unchecked_checkbox_start_column + 2)
+
+              vim.api.nvim_set_current_line(checked_line)
+              return
+            end
+
+            local checked_checkbox_start_column = current_line:find("%[[xX]%]")
+
+            if checked_checkbox_start_column then
+              local unchecked_line = current_line:sub(1, checked_checkbox_start_column)
+                .. " "
+                .. current_line:sub(checked_checkbox_start_column + 2)
+
+              vim.api.nvim_set_current_line(unchecked_line)
+              return
+            end
+
+            vim.notify("No markdown checkbox found on current line", vim.log.levels.INFO)
+          end,
+          desc = "Toggle markdown checkbox",
+        },
+
         -- copy relative file path to clipboard
         ["<Leader>cf"] = {
           function()
@@ -109,6 +140,9 @@ return {
       t = {
         -- terminal toggle (dismiss)
         ["<A-h>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle horizontal terminal" },
+
+        -- exit terminal mode (alias for the awkward default <C-\><C-n>)
+        ["<C-x>"] = { [[<C-\><C-n>]], desc = "Exit terminal mode" },
       },
     },
   },
