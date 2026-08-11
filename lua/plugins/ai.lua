@@ -388,6 +388,11 @@ Use your tools liberally to gather context. Research the web for documentation, 
 	-- GitHub Copilot inline completions (tab to accept)
 	-- Requires Copilot Business access: @spy github copilot add user=<github_handle>
 	-- Authenticates directly with GitHub (not via Shopify LLM proxy)
+	--
+	-- NOTE: We disable copilot.lua's own <Tab> keymap and instead handle <Tab>
+	-- inside blink.cmp's keymap below. This avoids a conflict where blink.cmp's
+	-- popup intercepts <Tab> and picks a completion item instead of accepting
+	-- the Copilot ghost-text suggestion.
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
@@ -398,7 +403,8 @@ Use your tools liberally to gather context. Research the web for documentation, 
 					enabled = true,
 					auto_trigger = true,
 					keymap = {
-						accept = "<Tab>",
+						-- <Tab> is handled by blink.cmp (see blink.cmp spec below)
+						accept = false,
 						accept_word = "<M-w>",
 						accept_line = "<M-l>",
 						next = "<M-]>",
@@ -413,5 +419,39 @@ Use your tools liberally to gather context. Research the web for documentation, 
 				},
 			})
 		end,
+	},
+
+	-- Make <Tab> prefer a visible Copilot suggestion over blink.cmp's menu.
+	-- Behavior:
+	--   1. If a Copilot ghost-text suggestion is visible -> accept it.
+	--   2. Else if blink.cmp menu is open -> accept the selected item.
+	--   3. Else if inside a snippet -> jump forward.
+	--   4. Else fall through to a literal <Tab>.
+	--
+	-- Notes on robustness (2026-05-20):
+	--   - Wrap `is_visible` / `accept` in pcall: copilot.lua API has churned and
+	--     a raised error here would silently consume <Tab>.
+	--   - Defer `accept()` with `vim.schedule`: blink.cmp dispatches keymap
+	--     callbacks in a context where direct buffer mutation can be a no-op.
+	{
+		"saghen/blink.cmp",
+		opts = {
+			keymap = {
+				["<Tab>"] = {
+					function()
+						local ok, suggestion = pcall(require, "copilot.suggestion")
+						if not ok or type(suggestion) ~= "table" then return end
+						local visible_ok, visible = pcall(suggestion.is_visible)
+						if visible_ok and visible then
+							vim.schedule(function() pcall(suggestion.accept) end)
+							return true
+						end
+					end,
+					"select_and_accept",
+					"snippet_forward",
+					"fallback",
+				},
+			},
+		},
 	},
 }
