@@ -4,6 +4,17 @@ return {
   -- Symbol outline / code structure sidebar
   {
     "stevearc/aerial.nvim",
+    -- AstroNvim v5 pins plugins to a tested set, which held aerial at v2.7.0.
+    -- That release calls `iter_matches({ all = false })`, an option Neovim 0.12
+    -- removed. iter_matches now always yields a list of nodes per capture, so
+    -- aerial's treesitter backend crashed with "attempt to call method 'type'
+    -- (a nil value)" whenever it built an outline. Markdown is where this shows
+    -- up, because Markdown has no language server and therefore falls back to
+    -- the treesitter backend. Upstream fixed it in f93dcee.
+    --
+    -- `version = false` opts this plugin out of the AstroNvim pin so it tracks
+    -- master. Revert once the AstroNvim pin includes the fix.
+    version = false,
     keys = {
       { "<Leader>ls", "<cmd>AerialToggle<cr>", desc = "Symbol outline" },
     },
