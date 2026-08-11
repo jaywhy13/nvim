@@ -70,7 +70,9 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     cmd = { "Octo" },
-    opts = {},
+    opts = {
+      picker = "snacks",
+    },
     keys = {
       { "<Leader>gpl", "<cmd>Octo pr list<cr>",     desc = "PR list" },
       { "<Leader>gpc", "<cmd>Octo pr create<cr>",   desc = "PR create" },
