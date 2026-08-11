@@ -8,4 +8,8 @@ return {
 	{ import = "astrocommunity.pack.lua" },
 	{ import = "astrocommunity.pack.rust" },
 	{ import = "astrocommunity.pack.ruby" },
+	{ import = "astrocommunity.pack.typescript" },
+	{ import = "astrocommunity.pack.python.base" },
+	{ import = "astrocommunity.pack.python.black" },
+	{ import = "astrocommunity.pack.python.isort" },
 }
