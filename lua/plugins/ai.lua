@@ -360,6 +360,26 @@ Use your tools liberally to gather context. Research the web for documentation, 
 		},
 	},
 
+	-- pi.nvim: ask the `pi` command-line agent about the current buffer or
+	-- selection. pi runs asynchronously and edits files on disk, then pi.nvim
+	-- reloads the changed buffers.
+	--
+	-- Requires the `pi` binary on PATH. Model and provider are intentionally not
+	-- set here so pi uses its own configuration; run `pi --list-models` to see
+	-- the available options.
+	{
+		"pablopunk/pi.nvim",
+		cmd = { "PiAsk", "PiAskSelection", "PiCancel", "PiLog" },
+		opts = {},
+		keys = {
+			{ "<leader>aip", nil, desc = "Pi" },
+			{ "<leader>aipa", "<cmd>PiAsk<cr>", desc = "Ask pi" },
+			{ "<leader>aips", "<cmd>PiAskSelection<cr>", mode = "v", desc = "Ask pi (selection)" },
+			{ "<leader>aipc", "<cmd>PiCancel<cr>", desc = "Cancel pi request" },
+			{ "<leader>aipl", "<cmd>PiLog<cr>", desc = "Open pi log" },
+		},
+	},
+
 	-- TTS
 	{
 		"chriswritescode-dev/tts.nvim",
