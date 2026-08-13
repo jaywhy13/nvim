@@ -4,6 +4,10 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	opts = function(_, opts)
+		-- nvim-treesitter's master branch is archived and its query predicates are
+		-- incompatible with Neovim 0.12. Re-register the affected ones.
+		require("user.ts_predicate_compat").setup()
+
 		if opts.ensure_installed == "all" then
 			return
 		end
