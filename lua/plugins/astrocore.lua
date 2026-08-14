@@ -83,6 +83,14 @@ return {
         -- clear search highlights
         ["<Leader>h"] = { "<cmd>noh<cr>", desc = "Clear search highlights" },
 
+        -- AstroNvim maps <Leader>gg to lazygit whenever the lazygit binary is
+        -- present, and AstroCore sets its mappings after lazy.nvim registers the
+        -- lazy-loading key stubs, so it was overriding the Neogit mapping in
+        -- lua/plugins/git.lua. Setting false tells AstroCore to skip the mapping
+        -- rather than delete it, which leaves Neogit's own key stub in place.
+        -- lazygit is still available on <Leader>tl.
+        ["<Leader>gg"] = false,
+
         -- toggle markdown checkbox on the current line
         ["<Leader>mt"] = {
           function()
