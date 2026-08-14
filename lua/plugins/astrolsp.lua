@@ -168,11 +168,17 @@ return {
 					desc = "Hover documentation",
 					cond = "textDocument/hover",
 				},
+				-- Same merge gotcha as <Leader>lh above: AstroNvim's default <Leader>ll
+				-- is "LSP CodeLens refresh", gated on textDocument/codeLens. Without an
+				-- explicit cond this mapping inherited that gate and disappeared for
+				-- servers without code lens, such as pyright. Diagnostics need no server
+				-- capability, so map it unconditionally.
 				["<Leader>ll"] = {
 					function()
 						vim.diagnostic.open_float(0, { scope = "line" })
 					end,
 					desc = "Show line diagnostics",
+					cond = true,
 				},
 
 				-- navigation
