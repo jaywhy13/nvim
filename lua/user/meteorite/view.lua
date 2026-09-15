@@ -5,6 +5,7 @@ local M = {}
 local DEFAULT_CONTEXT_LINES = 3
 local CONTEXT_STEP = 3
 local MAX_CONTEXT_LINES = 200
+local sidebar_namespace = vim.api.nvim_create_namespace("meteorite_sidebar")
 
 ---@class MeteoriteReviewState
 ---@field repository_root string
@@ -68,6 +69,37 @@ local function close_review()
 	end
 end
 
+---@param tree_entry MeteoriteTreeEntry
+---@return string line
+---@return integer icon_start
+---@return string icon
+---@return string icon_highlight
+function M.decorated_tree_line(tree_entry)
+	if tree_entry.kind == "file" and tree_entry.path then
+		local indent, file_name = tree_entry.line:match("^(%s*)(.*)$")
+		local icon, icon_highlight = require("nvim-web-devicons").get_icon(file_name, nil, { default = true })
+		local prefix = indent .. "  "
+		return prefix .. icon .. " " .. file_name, #prefix, icon, icon_highlight
+	end
+
+	local indent = tree_entry.line:match("^(%s*)") or ""
+	local content = tree_entry.line:sub(#indent + 1)
+	local disclosure
+	if vim.startswith(content, "▾ ") then
+		disclosure = "▾"
+	elseif vim.startswith(content, "▸ ") then
+		disclosure = "▸"
+	else
+		return tree_entry.line, 0, "", "Normal"
+	end
+	local label = content:sub(#disclosure + 2)
+
+	local icon = tree_entry.kind == "pull_request" and "" or (disclosure == "▾" and "" or "")
+	local icon_highlight = tree_entry.kind == "pull_request" and "Special" or "Directory"
+	local prefix = indent .. disclosure .. " "
+	return prefix .. icon .. " " .. label, #prefix, icon, icon_highlight
+end
+
 local function render_sidebar()
 	if not state or not vim.api.nvim_buf_is_valid(state.sidebar_buffer) then
 		return
@@ -79,10 +111,35 @@ local function render_sidebar()
 		state.collapsed_pull_requests,
 		state.collapsed_directories
 	)
-	local lines = vim.tbl_map(function(tree_entry)
-		return tree_entry.line
-	end, state.tree_entries)
+	local lines = {}
+	local icon_highlights = {}
+	for line_number, tree_entry in ipairs(state.tree_entries) do
+		local line, icon_start, icon, icon_highlight = M.decorated_tree_line(tree_entry)
+		table.insert(lines, line)
+		icon_highlights[line_number] = {
+			start_column = icon_start,
+			end_column = icon_start + #icon,
+			highlight = icon_highlight,
+		}
+	end
+
 	replace_buffer_lines(state.sidebar_buffer, lines)
+	vim.api.nvim_buf_clear_namespace(state.sidebar_buffer, sidebar_namespace, 0, -1)
+	for line_number, tree_entry in ipairs(state.tree_entries) do
+		if tree_entry.kind == "pull_request" then
+			vim.api.nvim_buf_add_highlight(state.sidebar_buffer, sidebar_namespace, "Title", line_number - 1, 0, -1)
+		end
+	end
+	for line_number, highlight in pairs(icon_highlights) do
+		vim.api.nvim_buf_add_highlight(
+			state.sidebar_buffer,
+			sidebar_namespace,
+			highlight.highlight,
+			line_number - 1,
+			highlight.start_column,
+			highlight.end_column
+		)
+	end
 end
 
 local function diff_winbar()

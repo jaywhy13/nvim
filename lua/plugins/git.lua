@@ -2,6 +2,15 @@ return {
   -- Git status signs in the gutter (AstroNvim default — extended here with mappings)
   {
     "lewis6991/gitsigns.nvim",
+    opts = function(_, opts)
+      local on_attach = opts.on_attach
+      opts.on_attach = function(buffer)
+        if on_attach and on_attach(buffer) == false then return false end
+        -- Remove AstroNvim's buffer-local staging key so Meteorite's global
+        -- lazy-loading mapping remains reachable in Git-tracked files.
+        pcall(vim.keymap.del, "n", "<Leader>gs", { buffer = buffer })
+      end
+    end,
     keys = {
       { "<Leader>gdp", "<cmd>Gitsigns preview_hunk<cr>",        desc = "Preview hunk" },
       { "<Leader>gdi", "<cmd>Gitsigns preview_hunk_inline<cr>", desc = "Preview hunk inline" },

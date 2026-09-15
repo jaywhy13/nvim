@@ -1,4 +1,5 @@
 local Client = require("user.meteorite.client")
+local repository = require("user.meteorite.repository")
 local review_view = require("user.meteorite.view")
 
 local M = {}
@@ -6,13 +7,15 @@ local M = {}
 local client = Client.new()
 
 local function repository_root()
-	local working_directory_root = vim.fs.root(vim.fn.getcwd(), ".git")
-	if working_directory_root then
-		return working_directory_root
+	local candidate_paths = {
+		vim.api.nvim_buf_get_name(0),
+		vim.fn.getcwd(),
+	}
+	for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
+		table.insert(candidate_paths, vim.api.nvim_buf_get_name(buffer))
 	end
 
-	local current_path = vim.api.nvim_buf_get_name(0)
-	return current_path ~= "" and vim.fs.root(current_path, ".git") or nil
+	return repository.find(candidate_paths)
 end
 
 ---@param stack MeteoriteStack
@@ -71,7 +74,10 @@ local function pick_stack(root, stacks)
 			return picker_items
 		end,
 		format = function(item)
-			return { { item.title, "Title" } }
+			return {
+				{ "  ", "Special" },
+				{ item.title, "Title" },
+			}
 		end,
 		layout = { preset = "telescope" },
 		matcher = {
