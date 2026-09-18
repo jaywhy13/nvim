@@ -13,6 +13,7 @@ local sidebar_namespace = vim.api.nvim_create_namespace("meteorite_sidebar")
 ---@field files_by_pull_request table<integer, string[]>
 ---@field collapsed_pull_requests table<integer, boolean>
 ---@field collapsed_directories table<string, boolean>
+---@field listing_style "tree"|"flat"
 ---@field client table
 ---@field tabpage integer
 ---@field sidebar_window integer
@@ -76,10 +77,11 @@ end
 ---@return string icon_highlight
 function M.decorated_tree_line(tree_entry)
 	if tree_entry.kind == "file" and tree_entry.path then
-		local indent, file_name = tree_entry.line:match("^(%s*)(.*)$")
+		local indent, label = tree_entry.line:match("^(%s*)(.*)$")
+		local file_name = vim.fn.fnamemodify(tree_entry.path, ":t")
 		local icon, icon_highlight = require("nvim-web-devicons").get_icon(file_name, nil, { default = true })
 		local prefix = indent .. "  "
-		return prefix .. icon .. " " .. file_name, #prefix, icon, icon_highlight
+		return prefix .. icon .. " " .. label, #prefix, icon, icon_highlight
 	end
 
 	local indent = tree_entry.line:match("^(%s*)") or ""
@@ -109,8 +111,12 @@ local function render_sidebar()
 		state.stack,
 		state.files_by_pull_request,
 		state.collapsed_pull_requests,
-		state.collapsed_directories
+		state.collapsed_directories,
+		state.listing_style
 	)
+	vim.wo[state.sidebar_window].winbar = " Files · "
+		.. state.listing_style
+		.. " · f tree/flat · Enter select · q close "
 	local lines = {}
 	local icon_highlights = {}
 	for line_number, tree_entry in ipairs(state.tree_entries) do
@@ -148,7 +154,7 @@ local function diff_winbar()
 	end
 
 	return string.format(
-		" #%d · %s · context %d · [/] hunks · +/- context · <C-h> files · q close ",
+		" #%d · %s · context %d · [/] hunks · +/- context · f tree/flat · <C-h> files · q close ",
 		state.selected_pull_request.number,
 		state.selected_path,
 		state.context_lines
@@ -187,6 +193,7 @@ local function render_selected_file()
 	vim.keymap.set("n", "0", function()
 		M.reset_context()
 	end, { buffer = state.diff_buffer, desc = "Reset diff context" })
+	vim.keymap.set("n", "f", M.toggle_listing, { buffer = state.diff_buffer, desc = "Toggle flat/tree file list" })
 	vim.keymap.set("n", "r", render_selected_file, { buffer = state.diff_buffer, desc = "Refresh pull request diff" })
 	vim.keymap.set("n", "<C-h>", focus_sidebar, { buffer = state.diff_buffer, desc = "Focus changed files" })
 	vim.keymap.set("n", "q", close_review, { buffer = state.diff_buffer, desc = "Close Meteorite review" })
@@ -260,7 +267,7 @@ local function configure_sidebar()
 	vim.wo[state.sidebar_window].cursorline = true
 	vim.wo[state.sidebar_window].wrap = false
 	vim.wo[state.sidebar_window].winfixwidth = true
-	vim.wo[state.sidebar_window].winbar = " Pull requests and changed files · Enter select/toggle · q close "
+	vim.keymap.set("n", "f", M.toggle_listing, { buffer = buffer, desc = "Toggle flat/tree file list" })
 
 	vim.keymap.set("n", "<CR>", select_sidebar_entry, { buffer = buffer, desc = "Select Meteorite entry" })
 	vim.keymap.set("n", "l", select_sidebar_entry, { buffer = buffer, desc = "Select Meteorite entry" })
@@ -291,6 +298,7 @@ function M.open(repository_root, stack, files_by_pull_request, client)
 		files_by_pull_request = files_by_pull_request,
 		collapsed_pull_requests = {},
 		collapsed_directories = {},
+		listing_style = "tree",
 		client = client,
 		tabpage = review_tabpage,
 		sidebar_window = sidebar_window,
@@ -305,6 +313,43 @@ function M.open(repository_root, stack, files_by_pull_request, client)
 	render_sidebar()
 	show_right_message("Select a changed file to view its Difftastic diff")
 	focus_sidebar()
+end
+
+function M.toggle_listing()
+	if not state or not vim.api.nvim_win_is_valid(state.sidebar_window) then
+		return
+	end
+
+	local cursor = vim.api.nvim_win_get_cursor(state.sidebar_window)
+	local anchor = state.tree_entries[cursor[1]]
+	state.listing_style = state.listing_style == "tree" and "flat" or "tree"
+	if state.listing_style == "tree" and anchor and anchor.path then
+		local directory = anchor.path:match("^(.+)/[^/]+$")
+		while directory do
+			state.collapsed_directories[tostring(anchor.pull_request.number) .. ":" .. directory] = nil
+			directory = directory:match("^(.+)/[^/]+$")
+		end
+	end
+	render_sidebar()
+	if not anchor then
+		return
+	end
+
+	local target_line
+	for line_number, entry in ipairs(state.tree_entries) do
+		if entry.pull_request.number == anchor.pull_request.number then
+			if entry.kind == "pull_request" then
+				target_line = line_number
+			end
+			if anchor.kind == "file" and entry.path == anchor.path then
+				target_line = line_number
+				break
+			end
+		end
+	end
+	if target_line then
+		vim.api.nvim_win_set_cursor(state.sidebar_window, { target_line, 0 })
+	end
 end
 
 ---@param change integer

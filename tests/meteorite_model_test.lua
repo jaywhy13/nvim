@@ -63,10 +63,29 @@ assert_equal(tree_entries[4].kind, "file", "file lines can be selected")
 assert_equal(tree_entries[4].pull_request.number, 10, "a file keeps its pull request revision range")
 assert_equal(tree_entries[4].path, "src/nested/two.lua", "nested file entries keep their repository path")
 
+local flat_entries = model.stack_tree(stacks[1], {
+	[10] = { "src/one.lua", "src/nested/two.lua", "root.lua" },
+	[11] = { "three.lua" },
+}, { [11] = true }, { ["10:src"] = true }, "flat")
+assert_equal(
+	vim.tbl_map(function(entry)
+		return entry.line
+	end, flat_entries),
+	{
+		"▾ #10 Foundation",
+		"    root.lua",
+		"    src/nested/two.lua",
+		"    src/one.lua",
+		"▸ #11 Feature",
+	},
+	"flat lists show full paths without directories and retain pull request folding"
+)
+assert_equal(flat_entries[3].path, "src/nested/two.lua", "flat entries preserve paths for diff loading")
+
 local diff_command = model.diff_command("/tmp/shop world", shared_stack[1].pullRequest, "path/with space.lua", 9)
 assert_equal(
 	diff_command,
-	"DFT_CONTEXT=9 GIT_EXTERNAL_DIFF='difft --color=always --display side-by-side-show-both' git -C '/tmp/shop world' diff 'base10' 'head10' -- 'path/with space.lua'",
+	"DFT_CONTEXT=9 GIT_EXTERNAL_DIFF='difft --color=always --syntax-highlight=on --display side-by-side-show-both' git -C '/tmp/shop world' diff 'base10' 'head10' -- 'path/with space.lua'",
 	"the diff command compares the exact pull request revisions and shell-escapes paths"
 )
 

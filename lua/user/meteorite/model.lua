@@ -146,8 +146,9 @@ end
 ---@param files_by_pull_request table<integer, string[]>
 ---@param collapsed_pull_requests table<integer, boolean>
 ---@param collapsed_directories table<string, boolean>|nil
+---@param listing_style "tree"|"flat"|nil
 ---@return MeteoriteTreeEntry[]
-function M.stack_tree(stack, files_by_pull_request, collapsed_pull_requests, collapsed_directories)
+function M.stack_tree(stack, files_by_pull_request, collapsed_pull_requests, collapsed_directories, listing_style)
 	local tree_entries = {}
 	collapsed_directories = collapsed_directories or {}
 
@@ -160,8 +161,22 @@ function M.stack_tree(stack, files_by_pull_request, collapsed_pull_requests, col
 		})
 
 		if not is_collapsed then
-			local file_tree = build_file_tree(files_by_pull_request[pull_request.number] or {})
-			append_file_tree_entries(tree_entries, file_tree, pull_request, "    ", collapsed_directories)
+			local paths = files_by_pull_request[pull_request.number] or {}
+			if listing_style == "flat" then
+				local sorted_paths = vim.list_extend({}, paths)
+				table.sort(sorted_paths)
+				for _, path in ipairs(sorted_paths) do
+					table.insert(tree_entries, {
+						kind = "file",
+						line = "    " .. path,
+						pull_request = pull_request,
+						path = path,
+					})
+				end
+			else
+				local file_tree = build_file_tree(paths)
+				append_file_tree_entries(tree_entries, file_tree, pull_request, "    ", collapsed_directories)
+			end
 		end
 	end
 
@@ -174,7 +189,7 @@ end
 ---@param context_lines integer
 ---@return string
 function M.diff_command(repository_root, pull_request, path, context_lines)
-	local external_diff = "difft --color=always --display side-by-side-show-both"
+	local external_diff = "difft --color=always --syntax-highlight=on --display side-by-side-show-both"
 	local arguments = {
 		"DFT_CONTEXT=" .. tostring(context_lines),
 		"GIT_EXTERNAL_DIFF=" .. vim.fn.shellescape(external_diff),

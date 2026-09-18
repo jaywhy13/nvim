@@ -5,7 +5,8 @@ vim.o.lines = 50
 for _, plugin in ipairs({ "difft.nvim", "nvim-web-devicons" }) do
 	vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/lazy/" .. plugin)
 end
-require("difft").setup(dofile("lua/plugins/meteorite.lua")[1].opts)
+local specification = dofile("lua/plugins/meteorite.lua")[1]
+specification.config(nil, specification.opts)
 local repository = require("user.meteorite.repository")
 local Client = require("user.meteorite.client")
 local view = require("user.meteorite.view")
@@ -102,9 +103,20 @@ local success, failure = xpcall(function()
 	vim.api.nvim_win_set_cursor(sidebar, { 2, 0 })
 	press("<CR>")
 	assert(vim.api.nvim_buf_line_count(sidebar_buffer) == 2, "folder should collapse")
-	press("<CR>")
-	assert(vim.api.nvim_buf_line_count(sidebar_buffer) == 4, "folder should expand")
-	vim.api.nvim_win_set_cursor(sidebar, { 3, 0 })
+	press("f")
+	vim.api.nvim_win_set_cursor(sidebar, { 2, 0 })
+	press("f")
+	assert(
+		vim.api.nvim_buf_line_count(sidebar_buffer) == 4,
+		"returning to the tree must reveal a previously folded file"
+	)
+	assert(vim.api.nvim_win_get_cursor(sidebar)[1] == 3, "tree toggle must reveal the focused file")
+	press("f")
+	local flat_lines = vim.api.nvim_buf_get_lines(sidebar_buffer, 0, -1, false)
+	assert(#flat_lines == 3, "flat view must omit directory rows")
+	assert(flat_lines[2]:find("source/example.lua", 1, true), "flat view must show full paths")
+	assert(flat_lines[2]:find(lua_icon, 1, true), "flat view must retain file-type icons")
+	assert(vim.api.nvim_win_get_cursor(sidebar)[1] == 2, "toggle must retain the file under the cursor")
 	press("<CR>")
 	local function rendered()
 		return vim.bo.filetype == "difft"
@@ -115,6 +127,11 @@ local success, failure = xpcall(function()
 		"selected file did not render its committed Difftastic content: "
 			.. vim.inspect(vim.api.nvim_buf_get_lines(0, 0, -1, false))
 	)
+	local diff_buffer = vim.api.nvim_get_current_buf()
+	press("f")
+	assert(vim.api.nvim_get_current_buf() == diff_buffer, "changing the file list must not replace the diff")
+	assert(vim.api.nvim_buf_line_count(sidebar_buffer) == 4, "toggle from diff must restore the tree")
+	assert(vim.api.nvim_win_get_cursor(sidebar)[1] == 3, "tree toggle must keep the selected file")
 	local first_hunk = vim.api.nvim_win_get_cursor(0)[1]
 	press("]")
 	assert(vim.api.nvim_win_get_cursor(0)[1] > first_hunk, "next hunk must move forward")

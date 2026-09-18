@@ -17,6 +17,9 @@ return {
 		opts = {
 			layout = nil,
 			auto_jump = true,
+			diff = {
+				highlights = { info = "Comment", hint = "String" },
+			},
 			keymaps = {
 				next = "]",
 				prev = "[",
@@ -32,5 +35,9 @@ return {
 				relativenumber = false,
 			},
 		},
+		config = function(_, opts)
+			require("difft").setup(opts)
+			require("user.meteorite.syntax").setup()
+		end,
 	},
 }
