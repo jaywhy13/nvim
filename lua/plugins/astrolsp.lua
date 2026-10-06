@@ -19,6 +19,7 @@ return {
 		},
 		-- Language servers:
 		--   bashls   -> definitions / completion / hover / diagnostics for Bash scripts
+		--   bqls     -> completion / hover / query actions for BigQuery SQL
 		--   pyright  -> definitions / completion / hover / diagnostics for Python
 		--   ruby_lsp -> definitions / references / completion / hover (works in any Ruby project)
 		--   sorbet   -> type-checker diagnostics (only attaches when the repo has sorbet/config)
@@ -29,7 +30,7 @@ return {
 		-- NOTE: Do NOT add lua_ls here. AstroCommunity's Lua pack already starts it,
 		-- and listing it makes AstroLSP start a second lua_ls client on the same
 		-- buffer. lua/plugins/lua.lua attaches AstroLSP's mappings instead.
-		servers = { "bashls", "pyright", "ruby_lsp", "sorbet", "vtsls" },
+		servers = { "bashls", "bqls", "pyright", "ruby_lsp", "sorbet", "vtsls" },
 		-- Mason can auto-enable installed Ruby servers (solargraph/standardrb) and older
 		-- TypeScript language server packages (ts_ls). Prefer ruby-lsp + sorbet for Ruby
 		-- and vtsls from the AstroCommunity TypeScript pack for TypeScript.
@@ -46,6 +47,12 @@ return {
 		config = {
 			bashls = {
 				cmd = { "bash-language-server", "start" },
+			},
+			bqls = {
+				settings = {
+					project_id = "shopify-dw",
+					location = "US",
+				},
 			},
 			pyright = {
 				cmd = { "pyright-langserver", "--stdio" },

@@ -10,6 +10,7 @@
   "better-escape.nvim": { "branch": "master", "commit": "199dcc2643dec5d8dbdab4ec672cf405224dcb3b" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
+  "bqls.nvim": { "branch": "main", "commit": "6b011a0c0ecc526ad91d626a14ae267cb8878839" },
   "claudecode.nvim": { "branch": "main", "commit": "2390c6e45c4789072c293ac69de051d169668b29" },
   "cmp-dap": { "branch": "master", "commit": "ea92773e84c0ad3288c3bc5e452ac91559669087" },
   "codecompanion.nvim": { "branch": "main", "commit": "9a8e8602a7c72d10a827880fbb6fcd8bfa3830c7" },
